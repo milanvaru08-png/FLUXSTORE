@@ -51,7 +51,7 @@ const BottamProfileScreen = ({ navigation }: any) => {
         <ProfileItem title="Voucher" icon="🎟️" onPress={() => {}} />
         <ProfileItem title="My Wishlist" icon="❤️" onPress={() => {}} />
         <ProfileItem title="Rate this app" icon="⭐" onPress={() => {}} />
-        <ProfileItem title="Log out" icon="🚪" isLast onPress={() => {}} />
+        <ProfileItem title="Log out" icon="🚪" isLast onPress={() => {navigation.navigate("Signin")}} />
       </View>
     </SafeAreaView>
   );
