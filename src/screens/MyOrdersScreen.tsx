@@ -10,6 +10,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useOrders } from "../context/OrderContext";
 
+
 const { width } = Dimensions.get("window");
 const isTablet = width >= 768;
 
@@ -28,7 +29,7 @@ const MyOrdersScreen = ({ navigation }: any) => {
     <SafeAreaView style={styles.safe}>
       {/* HEADER */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.openDrawer?.()}>
+        <TouchableOpacity onPress={() => navigation.navigate("OrderMenu")}>
           <Text style={styles.menu}>☰</Text>
         </TouchableOpacity>
 

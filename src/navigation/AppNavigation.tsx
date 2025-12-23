@@ -15,6 +15,7 @@ import SearchScreen from '../screens/SearchScreen';
 import CartScreen from '../screens/CartScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import BottamProfileScreen from '../screens/BottamProfileScreen';
+import OrderMenuScreen from '../screens/OrderMenuScreen';
 
 import WomenScreen from '../screens/WomenScreen';
 import MenScreen from '../screens/MenScreen';
@@ -53,6 +54,7 @@ const AppNavigation = () => {
         <Stack.Screen name="MenScreen" component={MenScreen} />
         <Stack.Screen name="Setting" component={SettingScreen} />
         <Stack.Screen name="MyOrders" component={MyOrdersScreen} />
+        <Stack.Screen name="OrderMenu" component={OrderMenuScreen} />
 
         <Stack.Screen name="AccessoriesScreen" component={AccessoriesScreen} />
         <Stack.Screen name="BeautyScreen" component={BeautyScreen} />
