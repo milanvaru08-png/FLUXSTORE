@@ -90,7 +90,7 @@ const HomeScreen = ({ navigation }: any) => {
               <View style={styles.bannerText}>
                 <Text style={styles.bannerTitle}>Autumn</Text>
                 <Text style={styles.bannerTitle}>Collection</Text>
-                <Text style={styles.bannerYear}>2022</Text>
+                <Text style={styles.bannerYear}>2025</Text>
               </View>
             </View>
           )}
