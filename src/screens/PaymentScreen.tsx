@@ -13,8 +13,11 @@ import { useOrders } from "../context/OrderContext";
 
 const PaymentScreen = ({ navigation }: any) => {
   const { cart, clearCart } = useCart();
-  const [method, setMethod] = useState("card");
-const { addOrder } = useOrders();
+  const { addOrder } = useOrders();
+
+  const [method, setMethod] = useState<"cash" | "card">("card");
+  const [agreed, setAgreed] = useState(false);
+
   const subtotal = cart.reduce(
     (sum, item) => sum + item.price * item.qty,
     0
@@ -35,8 +38,9 @@ const { addOrder } = useOrders();
         <Text style={styles.step}>STEP 2</Text>
         <Text style={styles.heading}>Payment</Text>
 
-        {/* PAYMENT METHOD */}
+        {/* PAYMENT METHODS */}
         <View style={styles.methodRow}>
+          {/* CASH */}
           <TouchableOpacity
             style={[
               styles.methodCard,
@@ -48,11 +52,22 @@ const { addOrder } = useOrders();
               source={{
                 uri: "https://cdn-icons-png.flaticon.com/512/2331/2331941.png",
               }}
-              style={styles.methodIcon}
+              style={[
+                styles.methodIcon,
+                method === "cash" && styles.activeIcon,
+              ]}
             />
-            <Text style={styles.methodText}>Cash</Text>
+            <Text
+              style={[
+                styles.methodText,
+                method === "cash" && styles.activeText,
+              ]}
+            >
+              Cash
+            </Text>
           </TouchableOpacity>
 
+          {/* CARD */}
           <TouchableOpacity
             style={[
               styles.methodCard,
@@ -64,9 +79,19 @@ const { addOrder } = useOrders();
               source={{
                 uri: "https://cdn-icons-png.flaticon.com/512/633/633611.png",
               }}
-              style={styles.methodIcon}
+              style={[
+                styles.methodIcon,
+                method === "card" && styles.activeIcon,
+              ]}
             />
-            <Text style={styles.methodText}>Credit Card</Text>
+            <Text
+              style={[
+                styles.methodText,
+                method === "card" && styles.activeText,
+              ]}
+            >
+              Credit Card
+            </Text>
           </TouchableOpacity>
 
           <View style={styles.methodCard}>
@@ -74,21 +99,20 @@ const { addOrder } = useOrders();
           </View>
         </View>
 
-        {/* CARD */}
+        {/* CARD IMAGE */}
         <Text style={styles.choose}>Choose your card</Text>
-        
         <Image
           source={{
-            uri: "data:image/jpeg;base64,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",
+            uri: "https://pngimg.com/image/78769-credit-card-png-hd.png",
           }}
           style={styles.cardImage}
         />
-<Text style={styles.addNew}>Add new+</Text>
+        <Text style={styles.addNew}>Add new+</Text>
 
         {/* WALLET */}
         <Text style={styles.walletText}>or check out with</Text>
         <View style={styles.walletRow}>
-          <Image
+    <Image
             source={{
               uri: "data:image/png;base64,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",
             }}
@@ -131,31 +155,45 @@ const { addOrder } = useOrders();
             <Text style={styles.total}>${subtotal}</Text>
           </View>
 
+          {/* REAL CHECKBOX */}
           <View style={styles.checkboxRow}>
-            <Text style={styles.check}>✔</Text>
+            <TouchableOpacity
+              style={[
+                styles.checkbox,
+                agreed && styles.checkboxChecked,
+              ]}
+              onPress={() => setAgreed(!agreed)}
+            >
+              {agreed && <Text style={styles.tick}>✓</Text>}
+            </TouchableOpacity>
+
             <Text>I agree to </Text>
             <Text style={styles.link}>Terms and conditions</Text>
           </View>
-<TouchableOpacity
-  style={styles.placeBtn}
-  onPress={() => {
-    const newOrder = {
-      id: Date.now().toString(),
-      date: new Date().toLocaleDateString(),
-      items: cart,
-      subtotal,
-      status: "Pending",
-    };
 
-    addOrder(newOrder);   // ✅ Save order
-    clearCart();          // ✅ Clear cart
-    navigation.navigate("SuccessScreen"); // ✅ Navigate to SuccessScreen
-  }}
->
-  <Text style={styles.placeText}>Place my order</Text>
-</TouchableOpacity>
+          {/* PLACE ORDER */}
+          <TouchableOpacity
+            style={[
+              styles.placeBtn,
+              !agreed && styles.placeBtnDisabled,
+            ]}
+            disabled={!agreed}
+            onPress={() => {
+              const newOrder = {
+                id: Date.now().toString(),
+                date: new Date().toLocaleDateString(),
+                items: cart,
+                subtotal,
+                status: "Pending",
+              };
 
-
+              addOrder(newOrder);
+              clearCart();
+              navigation.navigate("SuccessScreen");
+            }}
+          >
+            <Text style={styles.placeText}>Place my order</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -163,6 +201,9 @@ const { addOrder } = useOrders();
 };
 
 export default PaymentScreen;
+
+/* ================= STYLES ================= */
+
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: "#fff" },
 
@@ -194,16 +235,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  activeMethod: { backgroundColor: "#333" },
+  activeMethod: {
+    backgroundColor: "#333",
+  },
 
   methodIcon: { width: 26, height: 26, marginBottom: 6 },
 
+  activeIcon: {
+    tintColor: "#fff",
+  },
+
   methodText: { fontSize: 12, color: "#000" },
+
+  activeText: {
+    color: "#fff",
+  },
 
   more: { fontSize: 20 },
 
   choose: { fontSize: 16, fontWeight: "600", marginTop: 16 },
-  addNew: { color: "red", position: "absolute", right: 16, top: 250 },
+  addNew: { color: "red", position: "absolute", right: 16, top: 260 },
 
   cardImage: {
     width: "100%",
@@ -246,13 +297,26 @@ const styles = StyleSheet.create({
     marginVertical: 14,
   },
 
-  check: {
-    width: 18,
-    height: 18,
-    backgroundColor: "#4CAF50",
-    color: "#fff",
-    textAlign: "center",
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 1.5,
+    borderColor: "#333",
+    borderRadius: 4,
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: 8,
+  },
+
+  checkboxChecked: {
+    backgroundColor: "#4CAF50",
+    borderColor: "#4CAF50",
+  },
+
+  tick: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "700",
   },
 
   link: { color: "#4CAF50" },
@@ -263,6 +327,10 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: "center",
     marginTop: 10,
+  },
+
+  placeBtnDisabled: {
+    backgroundColor: "#999",
   },
 
   placeText: { color: "#fff", fontWeight: "600", fontSize: 16 },

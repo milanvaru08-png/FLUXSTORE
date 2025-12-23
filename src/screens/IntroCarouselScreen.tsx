@@ -40,9 +40,7 @@ const IntroCarouselScreen = ({ navigation }: any) => {
   const flatRef = useRef<FlatList>(null);
 
   const onMomentumScrollEnd = (e: any) => {
-    const newIndex = Math.round(
-      e.nativeEvent.contentOffset.x / width
-    );
+    const newIndex = Math.round(e.nativeEvent.contentOffset.x / width);
     setIndex(newIndex);
   };
 
@@ -51,6 +49,7 @@ const IntroCarouselScreen = ({ navigation }: any) => {
       <Text style={styles.title}>{item.title}</Text>
       <Text style={styles.subtitle}>{item.subtitle}</Text>
 
+      {/* PHOTO CARD (ALWAYS ON TOP) */}
       <View style={styles.card}>
         <Image source={item.image} style={styles.image} />
       </View>
@@ -59,12 +58,12 @@ const IntroCarouselScreen = ({ navigation }: any) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="transparent"
-        translucent
-      />
+      <StatusBar translucent backgroundColor="transparent" />
 
+      {/* 🔥 BACKGROUND FIRST (BEHIND EVERYTHING) */}
+      <View style={styles.bottomBackground} />
+
+      {/* 🔥 CAROUSEL (ON TOP OF BACKGROUND) */}
       <FlatList
         ref={flatRef}
         data={DATA}
@@ -74,30 +73,28 @@ const IntroCarouselScreen = ({ navigation }: any) => {
         showsHorizontalScrollIndicator={false}
         onMomentumScrollEnd={onMomentumScrollEnd}
         renderItem={renderItem}
+        contentContainerStyle={{
+          paddingBottom: height * 0.45,
+        }}
       />
 
-      {/* BOTTOM SECTION */}
-      <View style={styles.bottom}>
+      {/* 🔥 FIXED BUTTON & DOTS */}
+      <View style={styles.bottomContent}>
         <View style={styles.dots}>
           {DATA.map((_, i) => (
             <View
               key={i}
-              style={[
-                styles.dot,
-                index === i && styles.activeDot,
-              ]}
+              style={[styles.dot, index === i && styles.activeDot]}
             />
           ))}
         </View>
 
         <TouchableOpacity
           style={styles.button}
-          activeOpacity={0.8}
+          activeOpacity={0.85}
           onPress={() => navigation.navigate("SignupScreen")}
         >
-          <Text style={styles.buttonText}>
-            Shopping now
-          </Text>
+          <Text style={styles.buttonText}>Shopping now</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -106,7 +103,7 @@ const IntroCarouselScreen = ({ navigation }: any) => {
 
 export default IntroCarouselScreen;
 
-/* ================= RESPONSIVE STYLES ================= */
+/* ================= STYLES ================= */
 
 const styles = StyleSheet.create({
   container: {
@@ -114,11 +111,21 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5F5F5",
   },
 
+  /* 🔥 DARK BACKGROUND (BEHIND PHOTO) */
+  bottomBackground: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    height: height * 0.5,
+    backgroundColor: "#4A4A4A",
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+  },
+
   slide: {
     width,
     alignItems: "center",
     paddingTop: isTablet ? height * 0.12 : height * 0.1,
-    backgroundColor: "#F5F5F5",
   },
 
   title: {
@@ -135,19 +142,19 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     textAlign: "center",
     paddingHorizontal: isTablet ? 80 : 40,
-    lineHeight: isTablet ? 24 : 20,
   },
 
+  /* 🔥 PHOTO CARD (NATURALLY ABOVE BACKGROUND) */
   card: {
     width: isTablet ? width * 0.5 : width * 0.7,
     height: isTablet ? height * 0.55 : height * 0.48,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#FFF",
     borderRadius: 24,
+    elevation: 12,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.12,
     shadowRadius: 8,
-    elevation: 4,
     overflow: "hidden",
   },
 
@@ -157,21 +164,17 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
 
-  bottom: {
+  /* 🔥 FIXED CONTENT */
+  bottomContent: {
     position: "absolute",
-    bottom: 0,
+    bottom: 40,
     width: "100%",
-    backgroundColor: "#4A4A4A",
-    paddingTop: isTablet ? 30 : 24,
-    paddingBottom: isTablet ? 50 : 40,
     alignItems: "center",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
   },
 
   dots: {
     flexDirection: "row",
-    marginBottom: 18,
+    marginBottom: 20,
   },
 
   dot: {
